@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Gateway/">
+    <Project Path="src/Gateway/ApiGateway/ApiGateway.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/">
+    <Project Path="src/Services/AuthService/AuthService.csproj" />
+    <Project Path="src/Services/CartService/CartService.csproj" />
+    <Project Path="src/Services/NotificationService/NotificationService.csproj" />
+    <Project Path="src/Services/OrderService/OrderService.csproj" />
+    <Project Path="src/Services/ProductService/ProductService.csproj" />
+  </Folder>
+  <Folder Name="/src/Web/">
+    <Project Path="src/Web/WebUI/WebUI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AuthService.Tests/AuthService.Tests.csproj" />
+    <Project Path="tests/ProductService.Tests/ProductService.Tests.csproj" />
+  </Folder>
+</Solution>
