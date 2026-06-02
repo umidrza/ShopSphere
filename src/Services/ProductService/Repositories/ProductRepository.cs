@@ -20,6 +20,22 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
     }
 
+    public async Task<List<Product>> GetPagedAsync(int pageNumber, int pageSize)
+    {
+        return await _context.Products
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<List<Product>> SearchAsync(string searchTerm)
+    {
+        return await _context.Products
+            .Where(x =>
+                x.Name.Contains(searchTerm))
+            .ToListAsync();
+    }
+
     public async Task<Product?> GetByIdAsync(Guid id)
     {
         return await _context.Products
