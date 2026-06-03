@@ -24,7 +24,3 @@ Microservices-based E-Commerce Platform built with:
 - Order Service
 - Notification Service
 - MVC Frontend
-
-## Status
-
-Project initialization completed.
