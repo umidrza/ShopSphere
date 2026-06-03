@@ -1,6 +1,26 @@
 @ProductService_HostAddress = http://localhost:5135
 
-GET {{ProductService_HostAddress}}/products/
+
+GET {{ProductService_HostAddress}}/api/categories/
+
+###
+GET {{ProductService_HostAddress}}/api/products/
+
+###
+GET {{ProductService_HostAddress}}/api/products/749105ff-4a0b-418d-a61b-7fdc4a0bf2f1
 Accept: application/json
 
 ###
+POST {{ProductService_HostAddress}}/api/products
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "iPhone 15",
+  "description": "Apple smartphone",
+  "price": 999.99,
+  "stock": 50,
+  "imageUrl": "string",
+  "categoryId": "bf4ab851-766a-4baa-8c89-1777dfaea9aa"
+}
+
