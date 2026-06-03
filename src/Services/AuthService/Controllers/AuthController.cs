@@ -8,20 +8,20 @@ namespace AuthService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController
-    : ControllerBase
+public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser>
-        _userManager;
-
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtService _jwtService;
+    private readonly IRefreshTokenService _refreshTokenService;
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
-        IJwtService jwtService)
+        IJwtService jwtService,
+        IRefreshTokenService refreshTokenService)
     {
         _userManager = userManager;
         _jwtService = jwtService;
+        _refreshTokenService = refreshTokenService;
     }
 
     [HttpPost("register")]
@@ -79,10 +79,15 @@ public class AuthController
                 user,
                 roles);
 
+        var refreshToken =
+            await _refreshTokenService
+                .GenerateAsync(user);
+
         return Ok(
             new AuthResponseDto
             {
-                AccessToken = token
+                AccessToken = token,
+                RefreshToken = refreshToken.Token
             });
     }
 }

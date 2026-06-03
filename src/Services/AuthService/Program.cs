@@ -1,4 +1,4 @@
-using System.Text;
+using AuthService.Configuration;
 using AuthService.Data;
 using AuthService.Models;
 using AuthService.Services;
@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,10 @@ builder.Services.AddScoped<
     IJwtService,
     JwtService>();
 
+builder.Services.AddScoped<
+    IRefreshTokenService,
+    RefreshTokenService>();
+
 builder.Services
     .AddAuthentication(
         JwtBearerDefaults.AuthenticationScheme)
@@ -55,9 +60,48 @@ builder.Services
                         Encoding.UTF8.GetBytes(
                             builder.Configuration["Jwt:Key"]!))
             };
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId =
+            builder.Configuration[
+                "Google:ClientId"]!;
+
+        options.ClientSecret =
+            builder.Configuration[
+                "Google:ClientSecret"]!;
+    })
+    .AddMicrosoftAccount(options =>
+    {
+        options.ClientId =
+            builder.Configuration[
+                "Microsoft:ClientId"]!;
+
+        options.ClientSecret =
+            builder.Configuration[
+                "Microsoft:ClientSecret"]!;
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(
+        AuthPolicies.ManageProducts,
+        policy =>
+        {
+            policy.RequireClaim(
+                ClaimConstants.CanManageProducts,
+                "true");
+        });
+
+    options.AddPolicy(
+        AuthPolicies.ManageOrders,
+        policy =>
+        {
+            policy.RequireClaim(
+                ClaimConstants.CanManageOrders,
+                "true");
+        });
+});
 
 var app = builder.Build();
 
@@ -80,6 +124,9 @@ using (var scope =
        app.Services.CreateScope())
 {
     await RoleSeeder.SeedAsync(
+        scope.ServiceProvider);
+
+    await AdminSeeder.SeedAsync(
         scope.ServiceProvider);
 }
 

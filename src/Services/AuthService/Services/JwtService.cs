@@ -1,8 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using AuthService.Configuration;
 using AuthService.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace AuthService.Services;
 
@@ -35,6 +36,16 @@ public class JwtService : IJwtService
                 new Claim(
                     ClaimTypes.Role,
                     role)));
+
+        claims.Add(
+            new Claim(
+                ClaimConstants.CanManageProducts,
+                "true"));
+
+        claims.Add(
+            new Claim(
+                ClaimConstants.CanManageOrders,
+                "true"));
 
         var key =
             new SymmetricSecurityKey(
