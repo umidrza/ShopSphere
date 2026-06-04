@@ -1,6 +1,26 @@
-@CartService_HostAddress = http://localhost:5156
+@CartService_Host = http://localhost:5156
+@token = JWT_TOKEN
 
-GET {{CartService_HostAddress}}/weatherforecast/
-Accept: application/json
+### Get Cart
+GET {{CartService_Host}}/api/cart
+Authorization: Bearer {{token}}
+
+###
+
+### Add Product To Cart
+POST {{CartService_Host}}/api/cart
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productId": "11111111-1111-1111-1111-111111111111",
+  "quantity": 2
+}
+
+###
+
+### Remove Product From Cart
+DELETE {{CartService_Host}}/api/cart/11111111-1111-1111-1111-111111111111
+Authorization: Bearer {{token}}
 
 ###
