@@ -70,16 +70,6 @@ builder.Services
         options.ClientSecret =
             builder.Configuration[
                 "Google:ClientSecret"]!;
-    })
-    .AddMicrosoftAccount(options =>
-    {
-        options.ClientId =
-            builder.Configuration[
-                "Microsoft:ClientId"]!;
-
-        options.ClientSecret =
-            builder.Configuration[
-                "Microsoft:ClientSecret"]!;
     });
 
 builder.Services.AddAuthorization(options =>

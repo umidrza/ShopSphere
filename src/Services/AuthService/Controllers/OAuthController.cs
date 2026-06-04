@@ -18,15 +18,4 @@ public class OAuthController
             },
             "Google");
     }
-
-    [HttpGet("microsoft")]
-    public IActionResult MicrosoftLogin()
-    {
-        return Challenge(
-            new AuthenticationProperties
-            {
-                RedirectUri = "/"
-            },
-            "Microsoft");
-    }
 }
