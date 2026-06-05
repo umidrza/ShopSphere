@@ -1,6 +1,18 @@
 @OrderService_HostAddress = http://localhost:5262
+@token = YOUR_JWT_TOKEN
 
-GET {{OrderService_HostAddress}}/weatherforecast/
-Accept: application/json
+### Create Order
+POST {{OrderService_HostAddress}}/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
 
-###
+{
+  "items": [
+    {
+      "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "productName": "string",
+      "price": 9,
+      "quantity": 2
+    }
+  ]
+}
