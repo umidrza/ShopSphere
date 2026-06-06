@@ -1,20 +1,13 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "http": {
+    "ApiGateway": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "http://localhost:5033",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "https://localhost:7000;http://localhost:5033",
+
+      "launchBrowser": true,
+
+      "applicationUrl": "https://localhost:8000",
+
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
