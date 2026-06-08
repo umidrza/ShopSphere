@@ -63,15 +63,12 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
-using (var scope =
-       app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
-    var context =
-        scope.ServiceProvider
-            .GetRequiredService<
-                ProductDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+    db.Database.Migrate();
 
-    await DbSeeder.SeedAsync(context);
+    await DbSeeder.SeedAsync(db);
 }
 
 app.Run();

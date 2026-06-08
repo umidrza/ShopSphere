@@ -1,0 +1,113 @@
+services:
+    
+  authservice:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+      args:
+        SERVICE_NAME: AuthService
+
+    depends_on:
+      - sqlserver
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+  productservice:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+      args:
+        SERVICE_NAME: ProductService
+
+    depends_on:
+      - sqlserver
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+  cartservice:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+      args:
+        SERVICE_NAME: CartService
+
+    depends_on:
+      - redis
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      
+  orderservice:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+      args:
+        SERVICE_NAME: OrderService
+
+    depends_on:
+      - rabbitmq
+      - sqlserver
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+  apigateway:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.gateway
+
+    ports:
+      - "8000:8080"
+
+    depends_on:
+      - authservice
+      - productservice
+      - cartservice
+      - orderservice
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SQL_SA_PASSWORD}"
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  redis:
+    image: redis:7
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  sqlserver_data:
+  rabbitmq_data:
+  redis_data:

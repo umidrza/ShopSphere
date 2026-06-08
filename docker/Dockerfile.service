@@ -1,0 +1,33 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+ARG SERVICE_NAME
+
+WORKDIR /src
+
+COPY NuGet.config ./
+COPY src/Services/${SERVICE_NAME}/${SERVICE_NAME}.csproj ./app.csproj
+
+RUN --mount=type=cache,id=nuget-cache,target=/root/.nuget/packages \
+    dotnet restore app.csproj \
+    --configfile NuGet.config
+
+COPY src/Services/${SERVICE_NAME}/ .
+
+RUN dotnet publish \
+    app.csproj \
+    -c Release \
+    -o /app/publish \
+    /p:UseAppHost=false
+
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+
+WORKDIR /app
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+EXPOSE 8080
+
+COPY --from=build /app/publish .
+
+ENTRYPOINT ["dotnet", "app.dll"]

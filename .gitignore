@@ -11,3 +11,6 @@ TestResults/
 publish/
 
 appsettings.Development.json
+appsettings.Docker.json
+
+.env

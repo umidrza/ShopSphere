@@ -1,4 +1,18 @@
 <Solution>
+  <Folder Name="/docker/">
+    <File Path="docker/docker-compose.rabbitmq.yml" />
+    <File Path="docker/docker-compose.redis.yml" />
+    <File Path="docker/Dockerfile.gateway" />
+    <File Path="docker/Dockerfile.service" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path=".env" />
+    <File Path=".gitignore" />
+    <File Path="docker-compose.yml" />
+    <File Path="NuGet.config" />
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/Gateway/">
     <Project Path="src/Gateway/ApiGateway/ApiGateway.csproj" />
