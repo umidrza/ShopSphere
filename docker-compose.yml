@@ -57,6 +57,20 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
 
+  notificationservice:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+      args:
+        SERVICE_NAME: NotificationService
+     
+    depends_on:
+      - rabbitmq
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      
   apigateway:
 
     build:
