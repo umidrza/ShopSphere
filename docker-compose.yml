@@ -89,6 +89,19 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
 
+
+  webui:
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - apigateway
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
 
