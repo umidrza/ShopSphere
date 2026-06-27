@@ -85,6 +85,7 @@ services:
       - productservice
       - cartservice
       - orderservice
+      - notificationservice
 
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
@@ -101,6 +102,9 @@ services:
 
     depends_on:
       - apigateway
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest

@@ -4,7 +4,7 @@
     <File Path="docker/docker-compose.redis.yml" />
     <File Path="docker/Dockerfile.gateway" />
     <File Path="docker/Dockerfile.service" />
-    <File Path="Dockerfile.web" />
+    <File Path="docker/Dockerfile.web" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".dockerignore" />
