@@ -1,22 +1,207 @@
-﻿@model List<WebUI.ViewModels.ProductVm>
+﻿@model WebUI.ViewModels.ProductListVm
 
-<h1>ShopSphere</h1>
+@{
+    ViewData["Title"] = "ShopSphere - Home";
+}
 
-<div>
+<div class="container py-5">
+    <!-- Header -->
+    <div class="mb-5">
+        <h1 class="display-4 fw-bold mb-2">
+            <i class="bi bi-shop me-2"></i>ShopSphere
+        </h1>
+        <p class="lead text-muted">
+            Discover amazing products across all categories
+        </p>
+    </div>
 
-    @foreach (var p in Model)
-    {
-        <div>
-
-            <h3>@p.Name</h3>
-
-            <p>$@p.Price</p>
-
-            <button>
-                Add To Cart
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <form method="get" class="input-group input-group-lg">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Search products..."
+                   value="@Model.SearchTerm"
+                   aria-label="Search products">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-search"></i> Search
             </button>
+            @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.SelectedCategoryId.HasValue)
+            {
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            }
+        </form>
+    </div>
 
+    <div class="row">
+        <!-- Sidebar - Categories -->
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-tag me-2"></i>Categories
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <!-- All Categories Link -->
+                        <a href="@Url.Action("Index")"
+                           class="list-group-item list-group-item-action @(Model.SelectedCategoryId == null ? "active bg-primary" : "")">
+                            <span class="badge bg-secondary float-end">@Model.Products.Count</span>
+                            <i class="bi bi-shop me-2"></i>All Products
+                        </a>
+
+                        <!-- Category Links -->
+                        @foreach (var category in Model.Categories.OrderBy(c => c.Name))
+                        {
+                            var isSelected = Model.SelectedCategoryId == category.Id;
+                            var productCount = Model.Products.Count(p => p.CategoryId == category.Id);
+
+                            <a href="@Url.Action("Index", new { categoryId = category.Id })"
+                               class="list-group-item list-group-item-action @(isSelected ? "active bg-primary" : "")">
+                                <span class="badge bg-secondary float-end">@productCount</span>
+                                <i class="bi bi-tag me-2"></i>@category.Name
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Filters -->
+            @if (Model.Products.Any())
+            {
+                <div class="card border-0 shadow-sm mt-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">Results</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-0">
+                            Showing <strong>@Model.Products.Count</strong> 
+                            @if (Model.SelectedCategoryId.HasValue)
+                            {
+                                <span>products in <strong>@Model.Categories.FirstOrDefault(c => c.Id == Model.SelectedCategoryId)?.Name</strong></span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            }
         </div>
+
+        <!-- Main Content - Products -->
+        <div class="col-lg-9">
+            @if (Model.Products.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var product in Model.Products.OrderBy(p => p.Name))
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm hover-card">
+                                <!-- Product Header -->
+                                <div class="card-header bg-light border-0 pb-0">
+                                    <span class="badge bg-info text-dark">
+                                        @product.CategoryName
+                                    </span>
+                                </div>
+
+                                <!-- Product Body -->
+                                <div class="card-body">
+                                    <h5 class="card-title text-truncate" title="@product.Name">
+                                        @product.Name
+                                    </h5>
+                                    
+                                    <p class="card-text text-muted small">
+                                        @if (string.IsNullOrEmpty(product.Description))
+                                        {
+                                            <span>No description available</span>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(product.Description.Length > 80 
+                                                ? product.Description.Substring(0, 80) + "..." 
+                                                : product.Description)
+                                        }
+                                    </p>
+
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <div>
+                                            <span class="h4 text-primary mb-0">
+                                                $@product.Price.ToString("0.00")
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Product Footer -->
+                                <div class="card-footer bg-white border-top">
+                                    <a href="@Url.Action("ProductDetail", new { id = product.Id })"
+                                       class="btn btn-sm btn-outline-primary w-100 mb-2">
+                                        <i class="bi bi-eye me-1"></i>View Details
+                                    </a>
+                                    <button class="btn btn-sm btn-primary w-100"
+                                            onclick="addToCart('@product.Id', '@product.Name')">
+                                        <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <!-- No Products Message -->
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>No products found</strong>
+                    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                    {
+                        <span>matching "<strong>@Model.SearchTerm</strong>"</span>
+                    }
+                    <a href="@Url.Action("Index")" class="alert-link">Clear filters and try again</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-</div>
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .list-group-item.active {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .input-group-lg .form-control {
+        border-radius: 0.375rem 0 0 0.375rem;
+    }
+
+    .input-group-lg .btn {
+        border-radius: 0 0.375rem 0.375rem 0;
+    }
+</style>
+
+<!-- Scripts -->
+<script>
+    function addToCart(productId, productName) {
+        alert(`Added "${productName}" to your cart!`);
+        // TODO: Implement actual cart functionality
+        console.log('Added to cart:', productId, productName);
+    }
+</script>

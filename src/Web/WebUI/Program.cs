@@ -4,6 +4,13 @@ var builder =
     WebApplication
         .CreateBuilder(args);
 
+builder.Services.AddLogging(config =>
+{
+    config.ClearProviders();
+    config.AddConsole();
+    config.AddDebug();
+});
+
 builder.Services
     .AddControllersWithViews();
 

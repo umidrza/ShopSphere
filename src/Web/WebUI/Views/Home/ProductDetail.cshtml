@@ -1,0 +1,170 @@
+@model WebUI.ViewModels.ProductVm
+
+@{
+    ViewData["Title"] = $"{Model.Name} - ShopSphere";
+}
+
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Index")">
+                    <i class="bi bi-house me-1"></i>Home
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Index", new { categoryId = Model.CategoryId })">
+                    @Model.CategoryName
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Image Placeholder -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body bg-light p-5 text-center">
+                    <i class="bi bi-image" style="font-size: 150px; color: #ccc;"></i>
+                    <p class="text-muted mt-3">Product image placeholder</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-lg-6">
+            <!-- Product Header -->
+            <div class="mb-4">
+                <span class="badge bg-info text-dark mb-3">
+                    <i class="bi bi-tag me-1"></i>@Model.CategoryName
+                </span>
+                <h1 class="display-5 fw-bold mb-2">@Model.Name</h1>
+                <p class="text-muted">Product ID: <code>@Model.Id</code></p>
+            </div>
+
+            <!-- Price Section -->
+            <div class="card border-0 bg-light p-4 mb-4">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <p class="text-muted mb-1">Price</p>
+                        <h2 class="text-primary fw-bold mb-0">
+                            $@Model.Price.ToString("0.00")
+                        </h2>
+                    </div>
+                    <div class="col-auto">
+                        <span class="badge bg-success">In Stock</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3">Description</h5>
+                    <p class="text-muted lh-lg">
+                        @Model.Description
+                    </p>
+                </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="mb-4">
+                <div class="input-group mb-3" style="max-width: 200px;">
+                    <button class="btn btn-outline-secondary" type="button">−</button>
+                    <input type="number" class="form-control text-center" value="1" min="1">
+                    <button class="btn btn-outline-secondary" type="button">+</button>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary btn-lg mb-2" onclick="addToCart('@Model.Id')">
+                        <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Products
+                    </a>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="bi bi-truck me-1"></i>Delivery
+                            </h6>
+                            <p class="fw-bold mb-0">Free shipping available</p>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="bi bi-shield-check me-1"></i>Guarantee
+                            </h6>
+                            <p class="fw-bold mb-0">30-day guarantee</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6 class="text-muted mb-2">
+                                <i class="bi bi-arrow-repeat me-1"></i>Returns
+                            </h6>
+                            <p class="fw-bold mb-0">Easy returns</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6 class="text-muted mb-2">
+                                <i class="bi bi-headset me-1"></i>Support
+                            </h6>
+                            <p class="fw-bold mb-0">24/7 Customer support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products Section (Optional) -->
+    <hr class="my-5">
+    <div class="mb-5">
+        <h3 class="fw-bold mb-4">
+            <i class="bi bi-collection me-2"></i>More from @Model.CategoryName
+        </h3>
+        <p class="text-muted">
+            Related products will be displayed here
+        </p>
+    </div>
+</div>
+
+<style>
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .display-5 {
+        color: #2c3e50;
+    }
+
+    .card {
+        transition: box-shadow 0.3s ease;
+    }
+
+    code {
+        background-color: #f8f9fa;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        color: #e83e8c;
+    }
+</style>
+
+<script>
+    function addToCart(productId) {
+        // Get quantity from input
+        const quantityInput = document.querySelector('input[type="number"]');
+        const quantity = parseInt(quantityInput?.value || 1);
+
+        alert(`Added ${quantity} item(s) to your cart!`);
+        console.log('Added to cart - Product ID:', productId, 'Quantity:', quantity);
+        // TODO: Implement actual cart functionality
+    }
+</script>
